@@ -5,14 +5,22 @@ from typing import Union
 from torch import profiler
 
 from Compare_Deep_Learning_Frameworks.fastai.fastai_cifar10 import (
-    get_cifar10_data,
+    get_fastai_cifar10_data,
     run_fastai_cifar10_training,
+)
+from Compare_Deep_Learning_Frameworks.jax.jax_cifar10 import (
+    get_jax_cifar10_data,
+    run_jax_cifar10_training,
 )
 
 IMPLEMENTED_FRAMEWORKS = {
     "fastai": {
-        "get_data": get_cifar10_data,
+        "get_data": get_fastai_cifar10_data,
         "run_training": run_fastai_cifar10_training,
+    },
+    "jax": {
+        "get_data": get_jax_cifar10_data,
+        "run_training": run_jax_cifar10_training,
     },
 }
 

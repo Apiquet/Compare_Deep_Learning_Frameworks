@@ -2,7 +2,7 @@ from fastai.data.core import DataLoaders
 from fastai.vision.all import *
 
 
-def get_cifar10_data(batch_size=128) -> DataLoaders:
+def get_fastai_cifar10_data(batch_size=128) -> DataLoaders:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
