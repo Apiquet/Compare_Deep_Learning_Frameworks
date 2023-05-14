@@ -1,5 +1,5 @@
-from fastai.vision.all import *
 from fastai.data.core import DataLoaders
+from fastai.vision.all import *
 
 
 def get_cifar10_data(batch_size=128) -> DataLoaders:
@@ -14,7 +14,7 @@ def get_cifar10_data(batch_size=128) -> DataLoaders:
 
 class CustomCNN(nn.Module):
     def __init__(self, num_classes=10):
-        super(CustomCNN, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
         self.relu1 = nn.ReLU()
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
@@ -41,7 +41,10 @@ class CustomCNN(nn.Module):
 
 
 def run_fastai_cifar10_training(
-    dataloader: DataLoaders, epochs: int = 3, batch_size: int = 128, learning_rate: float = 0.0001
+    dataloader: DataLoaders,
+    epochs: int = 3,
+    batch_size: int = 128,
+    learning_rate: float = 0.0001,
 ) -> float:
     """Run CIFAR10 training with FASTAI frameworks.
 
