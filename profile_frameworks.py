@@ -2,11 +2,12 @@
 import argparse
 from typing import Union
 
+from torch import profiler
+
 from Compare_Deep_Learning_Frameworks.fastai.fastai_cifar10 import (
     get_cifar10_data,
     run_fastai_cifar10_training,
 )
-from torch import profiler
 
 IMPLEMENTED_FRAMEWORKS = {
     "fastai": {
@@ -42,11 +43,14 @@ def profile_framework(
         record_shapes=True,
         with_stack=True,
     )
+    print("Start profiler")
     prof.start()
+    print("Start training")
     val_acc = IMPLEMENTED_FRAMEWORKS[framework_name]["run_training"](
         dataloader=dataloader,
         **training_params,
     )
+    print("Stop and save profiler log")
     prof.step()
     prof.stop()
 
