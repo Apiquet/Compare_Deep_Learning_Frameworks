@@ -16,10 +16,10 @@ class CustomCNN:
         super().__init__()
         # Define the network architecture
         self.conv_init, self.conv_apply = stax.serial(
-            stax.Conv(32, (3, 3), padding="SAME"),
+            stax.Conv(16, (3, 3), padding="SAME"),
             stax.Relu,
             stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
-            stax.Conv(16, (3, 3), padding="SAME"),
+            stax.Conv(32, (3, 3), padding="SAME"),
             stax.Relu,
             stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
             stax.Flatten,

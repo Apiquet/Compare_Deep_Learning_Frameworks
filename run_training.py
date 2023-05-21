@@ -30,6 +30,14 @@ def get_framework_utils(framework_name: str):
 
         get_data = get_mxnet_cifar10_data
         run_training = run_mxnet_cifar10_training
+    elif framework_name == "paddlepaddle":
+        from Compare_Deep_Learning_Frameworks.paddlepaddle.paddlepaddle_cifar10 import (
+            get_paddlepaddle_cifar10_data,
+            run_paddlepaddle_cifar10_training,
+        )
+
+        get_data = get_paddlepaddle_cifar10_data
+        run_training = run_paddlepaddle_cifar10_training
     else:
         raise ValueError(f"{framework_name} not in fastai, jax and mxnet")
 
@@ -83,14 +91,12 @@ if __name__ == "__main__":
         "-n",
         type=str,
         help="Framework to profile",
-        choices=list(IMPLEMENTED_FRAMEWORKS.keys()),
     )
     parser.add_argument(
         "--path_to_log",
         "-o",
         type=str,
         help="Path to save profiler log",
-        choices=list(IMPLEMENTED_FRAMEWORKS.keys()),
     )
     parser.add_argument(
         "--enable_profiling",
@@ -98,7 +104,6 @@ if __name__ == "__main__":
         type=bool,
         action="store_true",
         help="Profile framework training.",
-        choices=list(IMPLEMENTED_FRAMEWORKS.keys()),
     )
     args = parser.parse_args()
     training_params = {

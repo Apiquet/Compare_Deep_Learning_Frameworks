@@ -38,9 +38,9 @@ class CustomCNN:
         self.net = gluon.nn.Sequential()
         with self.net.name_scope():
             self.net.add(
-                gluon.nn.Conv2D(channels=32, kernel_size=3, padding=1, activation="relu"),
-                gluon.nn.MaxPool2D(pool_size=2, strides=2),
                 gluon.nn.Conv2D(channels=16, kernel_size=3, padding=1, activation="relu"),
+                gluon.nn.MaxPool2D(pool_size=2, strides=2),
+                gluon.nn.Conv2D(channels=32, kernel_size=3, padding=1, activation="relu"),
                 gluon.nn.MaxPool2D(pool_size=2, strides=2),
                 gluon.nn.Flatten(),
                 gluon.nn.Dense(64, activation="relu"),
