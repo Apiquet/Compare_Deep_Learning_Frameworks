@@ -28,7 +28,7 @@ def get_mxnet_cifar10_data(batch_size=128) -> dict:
     )
     train_data = datasets.CIFAR10(train=True).transform_first(transform_train)
     test_data = datasets.CIFAR10(train=False).transform_first(transform_test)
-    return {"train": train_data, "test": test_data}
+    return {"train_data": train_data, "test_data": test_data}
 
 
 class CustomCNN:
