@@ -101,5 +101,5 @@ def run_mxnet_cifar10_training(
         ).asscalar()
         test_acc += current_acc
 
-    test_acc / len(test_data)
+    test_acc /= len(test_data)
     return test_acc
