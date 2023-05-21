@@ -152,4 +152,4 @@ def run_pytorch_lightning_cifar10_training(
         logger=CSVLogger(save_dir="logs/"),
     )
     trainer.fit(model)
-    return trainer.test()["test_acc"]
+    return trainer.test()[0]["test_acc"]
