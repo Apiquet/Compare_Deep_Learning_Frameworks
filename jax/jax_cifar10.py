@@ -141,9 +141,7 @@ def run_jax_cifar10_training(
             X_batch, Y_batch = X_train[start:end], Y_train_one_hot[start:end]
 
             loss, gradients = value_and_grad(CrossEntropyLoss)(
-                opt_get_weights(opt_state),
-                X_batch,
-                Y_batch,
+                opt_get_weights(opt_state), X_batch, Y_batch, model=model
             )
 
             ## Update Weights
@@ -155,7 +153,9 @@ def run_jax_cifar10_training(
             progress_bar.set_postfix(train_loss=jnp.round(jnp.array(losses).mean(), decimals=3))
             progress_bar.update()
 
-    test_preds = MakePredictions(opt_get_weights(opt_state), X_test, batch_size=batch_size)
+    test_preds = MakePredictions(
+        opt_get_weights(opt_state), X_test, batch_size=batch_size, model=model
+    )
 
     ## Combine predictions of all batches
     test_preds = jnp.concatenate(test_preds).squeeze()
