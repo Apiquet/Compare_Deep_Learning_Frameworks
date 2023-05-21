@@ -55,9 +55,9 @@ def get_pytorch_cifar10_data(batch_size=128) -> dict:
 class Net(nn.Module):
     def __init__(self, input_size: Tuple[int, int], classes_count: int):
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, padding=1)
         self.pool1 = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(32, 16, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
         self.pool2 = nn.MaxPool2d(2, 2)
         input_flatten_size = int(16 * (input_size[0] / 4) * (input_size[1] / 4))
         self.fc1 = nn.Linear(input_flatten_size, 64)
