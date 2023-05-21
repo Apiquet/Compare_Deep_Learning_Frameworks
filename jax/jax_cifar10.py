@@ -25,11 +25,11 @@ conv_init, conv_apply = stax.serial(
 )
 
 
-def get_jax_cifar10_data(batch_size=128) -> Union[tf.Tensor, tf.data.Dataset]:
+def get_jax_cifar10_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
-        tfds.load returns tf.Tensors (or tf.data.Datasets if batch_size != -1)
+        dict containing 'train' and 'test' datasets with 'image' 'label' keys.
     """
     cifar10_data, _ = tfds.load(
         name="cifar10",

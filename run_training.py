@@ -25,10 +25,11 @@ IMPLEMENTED_FRAMEWORKS = {
 }
 
 
-def profile_framework(
+def run_training(
     framework_name: str,
     path_to_log: str,
     training_params: dict[str, Union[int, float]],
+    enable_profiling: bool = False,
 ) -> float:
     """Run Pytorch profiler on framework training.
 
@@ -45,22 +46,25 @@ def profile_framework(
 
     dataloader = IMPLEMENTED_FRAMEWORKS[framework_name]["get_data"]()
 
-    prof = profiler.profile(
-        schedule=profiler.schedule(wait=0, warmup=0, active=1, repeat=1),
-        on_trace_ready=profiler.tensorboard_trace_handler(path_to_log),
-        record_shapes=True,
-        with_stack=True,
-    )
-    print("Start profiler")
-    prof.start()
+    if enable_profiling:
+        prof = profiler.profile(
+            schedule=profiler.schedule(wait=0, warmup=0, active=1, repeat=1),
+            on_trace_ready=profiler.tensorboard_trace_handler(path_to_log),
+            record_shapes=True,
+            with_stack=True,
+        )
+    if enable_profiling:
+        print("Start profiler")
+        prof.start()
     print("Start training")
     val_acc = IMPLEMENTED_FRAMEWORKS[framework_name]["run_training"](
         dataloader=dataloader,
         **training_params,
     )
-    print("Stop and save profiler log")
-    prof.step()
-    prof.stop()
+    if enable_profiling:
+        print("Stop and save profiler log")
+        prof.step()
+        prof.stop()
 
     return val_acc
 
@@ -81,14 +85,23 @@ if __name__ == "__main__":
         help="Path to save profiler log",
         choices=list(IMPLEMENTED_FRAMEWORKS.keys()),
     )
+    parser.add_argument(
+        "--enable_profiling",
+        "-p",
+        type=bool,
+        action="store_true",
+        help="Profile framework training.",
+        choices=list(IMPLEMENTED_FRAMEWORKS.keys()),
+    )
     args = parser.parse_args()
     training_params = {
         "epochs": 1,
         "batch_size": 128,
         "learning_rate": 0.0001,
     }
-    profile_framework(
+    run_training(
         framework_name=args.framework_name,
         path_to_log=args.path_to_log,
         training_params=training_params,
+        enable_profiling=args.enable_profiling,
     )
