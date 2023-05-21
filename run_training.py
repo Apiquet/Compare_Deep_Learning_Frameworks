@@ -38,8 +38,16 @@ def get_framework_utils(framework_name: str):
 
         get_data = get_paddlepaddle_cifar10_data
         run_training = run_paddlepaddle_cifar10_training
+    elif framework_name == "pytorch":
+        from Compare_Deep_Learning_Frameworks.pytorch.pytorch_cifar10 import (
+            get_pytorch_cifar10_data,
+            run_pytorch_cifar10_training,
+        )
+
+        get_data = get_pytorch_cifar10_data
+        run_training = run_pytorch_cifar10_training
     else:
-        raise ValueError(f"{framework_name} not in fastai, jax and mxnet")
+        raise ValueError(f"{framework_name} not in fastai, jax, mxnet, paddlepaddle, pytorch")
 
     return get_data, run_training
 
