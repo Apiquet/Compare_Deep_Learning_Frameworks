@@ -10,19 +10,24 @@ import tensorflow as tf
 from jax import value_and_grad
 from jax.example_libraries import optimizers, stax
 
-conv_init, conv_apply = stax.serial(
-    stax.Conv(32, (3, 3), padding="SAME"),
-    stax.Relu,
-    stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
-    stax.Conv(16, (3, 3), padding="SAME"),
-    stax.Relu,
-    stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
-    stax.Flatten,
-    stax.Dense(64),
-    stax.Relu,
-    stax.Dense(10),
-    stax.Softmax,
-)
+
+class CustomCNN:
+    def __init__(self, num_classes=10):
+        super().__init__()
+        # Define the network architecture
+        self.conv_init, self.conv_apply = stax.serial(
+            stax.Conv(32, (3, 3), padding="SAME"),
+            stax.Relu,
+            stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
+            stax.Conv(16, (3, 3), padding="SAME"),
+            stax.Relu,
+            stax.MaxPool(window_shape=(2, 2), strides=(2, 2)),
+            stax.Flatten,
+            stax.Dense(64),
+            stax.Relu,
+            stax.Dense(num_classes),
+            stax.Softmax,
+        )
 
 
 def get_jax_cifar10_data(batch_size=128) -> dict:
@@ -43,13 +48,15 @@ def MakePredictions(
     weights: list[Tuple[jax.Array, jax.Array]],
     input_data: jax.Array,
     batch_size: int,
+    model: CustomCNN,
 ) -> list[jax.Array]:
     """Make predictions for a batch of data.
 
     Args:
         weights: list from _, _, opt_get_weights = optimizers.adam(lr), opt_get_weights(opt_state)
         input_data: input data of shape (batch_size, width, height, channels)
-        batch_size (int): The batch size.
+        batch_size: The batch size.
+        model: model with conv_apply var
     Returns:
         A list of predictions.
     """
@@ -65,7 +72,7 @@ def MakePredictions(
         X_batch = input_data[start:end]
 
         if X_batch.shape[0] != 0:
-            preds.append(conv_apply(weights, X_batch))
+            preds.append(model.conv_apply(weights, X_batch))
 
     return preds
 
@@ -74,6 +81,7 @@ def CrossEntropyLoss(
     weights: list,
     input_data: jax.Array,
     targets: jax.Array,
+    model: CustomCNN,
 ) -> jax.Array:
     """Implement of cross entropy loss.
 
@@ -81,11 +89,12 @@ def CrossEntropyLoss(
         weights: list from _, _, opt_get_weights = optimizers.adam(lr), opt_get_weights(opt_state)
         input_data: data to predict
         targets: groundtruth targets in one hot encoding
+        model: model with conv_apply var
 
     Returns:
         loss value
     """
-    preds = conv_apply(weights, input_data)
+    preds = model.conv_apply(weights, input_data)
     log_preds = jnp.log(preds + tf.keras.backend.epsilon())
     return -jnp.mean(targets * log_preds)
 
@@ -101,6 +110,7 @@ def run_jax_cifar10_training(
     Returns:
         validation accuracy
     """
+    model = CustomCNN()
     train_data, test_data = dataloader["train"], dataloader["test"]
     X_train, Y_train = train_data["image"], train_data["label"]
     X_test, Y_test = test_data["image"], test_data["label"]
@@ -112,7 +122,7 @@ def run_jax_cifar10_training(
         jnp.array(Y_test, dtype=jnp.float32),
     )
     rng = jax.random.PRNGKey(123)
-    weights = conv_init(rng, (18, 32, 32, 3))[1]
+    weights = model.conv_init(rng, (18, 32, 32, 3))[1]
     opt_init, opt_update, opt_get_weights = optimizers.adam(learning_rate)
     opt_state = opt_init(weights)
     Y_train_one_hot = jax.nn.one_hot(Y_train, num_classes=10)
