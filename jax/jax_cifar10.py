@@ -105,7 +105,7 @@ def run_jax_cifar10_training(
     batch_size: int = 128,
     learning_rate: float = 0.0001,
 ) -> float:
-    """Run CIFAR10 training with FASTAI frameworks.
+    """Run CIFAR10 training with JAX frameworks.
 
     Returns:
         validation accuracy
@@ -141,7 +141,10 @@ def run_jax_cifar10_training(
             X_batch, Y_batch = X_train[start:end], Y_train_one_hot[start:end]
 
             loss, gradients = value_and_grad(CrossEntropyLoss)(
-                opt_get_weights(opt_state), X_batch, Y_batch, model=model
+                opt_get_weights(opt_state),
+                X_batch,
+                Y_batch,
+                model=model,
             )
 
             ## Update Weights
@@ -154,7 +157,10 @@ def run_jax_cifar10_training(
             progress_bar.update()
 
     test_preds = MakePredictions(
-        opt_get_weights(opt_state), X_test, batch_size=batch_size, model=model
+        opt_get_weights(opt_state),
+        X_test,
+        batch_size=batch_size,
+        model=model,
     )
 
     ## Combine predictions of all batches

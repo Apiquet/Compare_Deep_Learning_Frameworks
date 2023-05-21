@@ -4,25 +4,36 @@ from typing import Union
 
 from torch import profiler
 
-from Compare_Deep_Learning_Frameworks.fastai.fastai_cifar10 import (
-    get_fastai_cifar10_data,
-    run_fastai_cifar10_training,
-)
-from Compare_Deep_Learning_Frameworks.jax.jax_cifar10 import (
-    get_jax_cifar10_data,
-    run_jax_cifar10_training,
-)
 
-IMPLEMENTED_FRAMEWORKS = {
-    "fastai": {
-        "get_data": get_fastai_cifar10_data,
-        "run_training": run_fastai_cifar10_training,
-    },
-    "jax": {
-        "get_data": get_jax_cifar10_data,
-        "run_training": run_jax_cifar10_training,
-    },
-}
+def get_framework_utils(framework_name: str):
+    if framework_name == "fastai":
+        from Compare_Deep_Learning_Frameworks.fastai.fastai_cifar10 import (
+            get_fastai_cifar10_data,
+            run_fastai_cifar10_training,
+        )
+
+        get_data = get_fastai_cifar10_data
+        run_training = run_fastai_cifar10_training
+    elif framework_name == "jax":
+        from Compare_Deep_Learning_Frameworks.jax.jax_cifar10 import (
+            get_jax_cifar10_data,
+            run_jax_cifar10_training,
+        )
+
+        get_data = get_jax_cifar10_data
+        run_training = run_jax_cifar10_training
+    elif framework_name == "mxnet":
+        from Compare_Deep_Learning_Frameworks.mxnet.mxnet_cifar10 import (
+            get_mxnet_cifar10_data,
+            run_mxnet_cifar10_training,
+        )
+
+        get_data = get_mxnet_cifar10_data
+        run_training = run_mxnet_cifar10_training
+    else:
+        raise ValueError(f"{framework_name} not in fastai, jax and mxnet")
+
+    return get_data, run_training
 
 
 def run_training(
@@ -41,10 +52,8 @@ def run_training(
     Returns:
         val accuracy of the framework
     """
-    if framework_name not in IMPLEMENTED_FRAMEWORKS.keys():
-        raise ValueError(f"{framework_name} not in {IMPLEMENTED_FRAMEWORKS.keys()}")
-
-    dataloader = IMPLEMENTED_FRAMEWORKS[framework_name]["get_data"]()
+    get_data, run_training = get_framework_utils(framework_name)
+    dataloader = get_data()
 
     if enable_profiling:
         prof = profiler.profile(
@@ -57,10 +66,8 @@ def run_training(
         print("Start profiler")
         prof.start()
     print("Start training")
-    val_acc = IMPLEMENTED_FRAMEWORKS[framework_name]["run_training"](
-        dataloader=dataloader,
-        **training_params,
-    )
+    val_acc = run_training(dataloader=dataloader, **training_params)
+
     if enable_profiling:
         print("Stop and save profiler log")
         prof.step()
