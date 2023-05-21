@@ -33,7 +33,7 @@ def get_jax_cifar10_data(batch_size=128) -> dict:
     """
     cifar10_data, _ = tfds.load(
         name="cifar10",
-        batch_size=batch_size,
+        batch_size=-1,  # seems easier to handle in the training loop with jax
         with_info=True,
     )
     return tfds.as_numpy(cifar10_data)
@@ -118,7 +118,7 @@ def run_jax_cifar10_training(
     Y_train_one_hot = jax.nn.one_hot(Y_train, num_classes=10)
 
     for i in range(epochs):
-        batches = jnp.arange((X.shape[0] // batch_size) + 1)
+        batches = jnp.arange((X_train.shape[0] // batch_size) + 1)
         progress_bar = tqdm(batches, position=0, leave=True)
 
         losses = []
