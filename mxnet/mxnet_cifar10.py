@@ -68,7 +68,6 @@ def run_mxnet_cifar10_training(
 
     # Train the network
     batch_size = 128
-    epochs = 2
     train_loader = gluon.data.DataLoader(train_data, batch_size, shuffle=True)
     test_loader = gluon.data.DataLoader(test_data, batch_size)
     for epoch in range(epochs):
