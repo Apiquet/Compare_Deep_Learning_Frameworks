@@ -22,6 +22,14 @@ def get_framework_utils(framework_name: str):
 
         get_data = get_jax_cifar10_data
         run_training = run_jax_cifar10_training
+    elif framework_name == "keras":
+        from Compare_Deep_Learning_Frameworks.keras.keras_cifar10 import (
+            get_keras_cifar10_data,
+            run_keras_cifar10_training,
+        )
+
+        get_data = get_keras_cifar10_data
+        run_training = run_keras_cifar10_training
     elif framework_name == "mxnet":
         from Compare_Deep_Learning_Frameworks.mxnet.mxnet_cifar10 import (
             get_mxnet_cifar10_data,
@@ -56,7 +64,7 @@ def get_framework_utils(framework_name: str):
         run_training = run_pytorch_lightning_cifar10_training
     else:
         raise ValueError(
-            f"{framework_name} not in fastai, jax, mxnet, paddlepaddle, pytorch, pytorch_lightning"
+            f"{framework_name} not in fastai, jax, keras, mxnet, paddlepaddle, pytorch, pytorch_lightning"
         )
 
     return get_data, run_training
@@ -100,38 +108,3 @@ def run_training(
         prof.stop()
 
     return val_acc
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process some integers.")
-    parser.add_argument(
-        "--framework_name",
-        "-n",
-        type=str,
-        help="Framework to profile",
-    )
-    parser.add_argument(
-        "--path_to_log",
-        "-o",
-        type=str,
-        help="Path to save profiler log",
-    )
-    parser.add_argument(
-        "--enable_profiling",
-        "-p",
-        type=bool,
-        action="store_true",
-        help="Profile framework training.",
-    )
-    args = parser.parse_args()
-    training_params = {
-        "epochs": 1,
-        "batch_size": 128,
-        "learning_rate": 0.0001,
-    }
-    run_training(
-        framework_name=args.framework_name,
-        path_to_log=args.path_to_log,
-        training_params=training_params,
-        enable_profiling=args.enable_profiling,
-    )
