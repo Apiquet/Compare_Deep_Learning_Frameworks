@@ -23,7 +23,7 @@ def get_data(batch_size=128) -> dict:
     return {"train_reader": train_reader, "test_reader": test_reader, "buf_size": buf_size}
 
 
-def vgg_bn_drop(input):
+def custom_cnn(input):
     def conv_block(ipt, num_filter, groups, dropouts):
         return paddle.fluid.nets.img_conv_group(
             input=ipt,
@@ -37,8 +37,8 @@ def vgg_bn_drop(input):
             pool_stride=2,
         )
 
-    conv1 = conv_block(input, 16, 2, [0.3, 0])
-    conv2 = conv_block(conv1, 32, 2, [0.4, 0])
+    conv1 = conv_block(input, 16, 2, [0, 0])
+    conv2 = conv_block(conv1, 32, 2, [0, 0])
     fc1 = paddle.fluid.layers.fc(input=conv2, size=64, act="relu")
     predict = paddle.fluid.layers.fc(input=fc1, size=10, act="softmax")
     return predict
@@ -49,8 +49,8 @@ def inference_program():
     data_shape = [3, 32, 32]
     images = paddle.fluid.layers.data(name="pixel", shape=data_shape, dtype="float32")
 
-    predict = vgg_bn_drop(images)
-    # predict = vgg_bn_drop(images) # un-comment to use vgg net
+    predict = custom_cnn(images)
+    # predict = custom_cnn(images) # un-comment to use vgg net
     return predict
 
 
