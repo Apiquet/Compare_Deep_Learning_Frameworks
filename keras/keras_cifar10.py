@@ -18,9 +18,9 @@ class CustomCNN(keras.Model):
     def __init__(self):
         super().__init__()
         self.model = keras.Sequential()
-        self.model.add(keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(32, 32, 3)))
+        self.model.add(keras.layers.Conv2D(16, (3, 3), activation="relu", input_shape=(32, 32, 3)))
         self.model.add(keras.layers.MaxPooling2D((2, 2)))
-        self.model.add(keras.layers.Conv2D(16, (3, 3), activation="relu"))
+        self.model.add(keras.layers.Conv2D(32, (3, 3), activation="relu"))
         self.model.add(keras.layers.MaxPooling2D((2, 2)))
         self.model.add(keras.layers.Flatten())
         self.model.add(keras.layers.Dense(64, activation="relu"))
