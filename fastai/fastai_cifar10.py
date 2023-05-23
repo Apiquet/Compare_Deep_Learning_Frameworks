@@ -22,9 +22,9 @@ class CustomCNN(nn.Module):
         self.relu2 = nn.ReLU()
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(32 * 8 * 8, 128)
+        self.fc1 = nn.Linear(32 * 8 * 8, 64)
         self.relu3 = nn.ReLU()
-        self.fc2 = nn.Linear(128, num_classes)
+        self.fc2 = nn.Linear(64, num_classes)
 
     def forward(self, x):
         out = self.conv1(x)
