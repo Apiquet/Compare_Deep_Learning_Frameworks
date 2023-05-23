@@ -52,6 +52,7 @@ def run_training(
     framework_name: str,
     training_params: dict[str, Union[int, float]],
     path_to_save_profiling_log: Optional[str] = None,
+    profiler_with_stack: bool = False,
 ) -> float:
     """Run Pytorch profiler on framework training.
 
@@ -61,6 +62,7 @@ def run_training(
       path_to_save_profiling_log: path to save the pytorch profiler log
         if None, profiling tool will not be used,
         if specified, a 1-epoch training will be ran to get a small profiling log.
+      profiler_with_stack: record source information (file and line number) for the ops.
 
     Returns:
         val accuracy of the framework
@@ -73,7 +75,7 @@ def run_training(
             schedule=profiler.schedule(wait=0, warmup=0, active=1, repeat=1),
             on_trace_ready=profiler.tensorboard_trace_handler(path_to_save_profiling_log),
             record_shapes=True,
-            with_stack=True,
+            with_stack=profiler_with_stack,
         )
         training_params["epochs"] = 1
     if path_to_save_profiling_log is not None:
