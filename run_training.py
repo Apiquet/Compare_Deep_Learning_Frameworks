@@ -72,16 +72,17 @@ def get_framework_utils(framework_name: str):
 
 def run_training(
     framework_name: str,
-    path_to_log: str,
     training_params: dict[str, Union[int, float]],
-    enable_profiling: bool = False,
+    path_to_save_profiling_log: Optional[str] = None,
 ) -> float:
     """Run Pytorch profiler on framework training.
 
     Args:
       framework_name: name of the framework
-      path_to_log: path to save the pytorch profiler log
       training_params: epochs, batch_size and learning_rate
+      path_to_save_profiling_log: path to save the pytorch profiler log
+        if None, profiling tool will not be used,
+        if specified, a 1-epoch training will be ran to get a small profiling log.
 
     Returns:
         val accuracy of the framework
@@ -89,20 +90,21 @@ def run_training(
     get_data, run_training = get_framework_utils(framework_name)
     dataloader = get_data()
 
-    if enable_profiling:
+    if path_to_save_profiling_log is not None:
         prof = profiler.profile(
             schedule=profiler.schedule(wait=0, warmup=0, active=1, repeat=1),
-            on_trace_ready=profiler.tensorboard_trace_handler(path_to_log),
+            on_trace_ready=profiler.tensorboard_trace_handler(path_to_save_profiling_log),
             record_shapes=True,
             with_stack=True,
         )
-    if enable_profiling:
+        training_params["epochs"] = 1
+    if path_to_save_profiling_log is not None:
         print("Start profiler")
         prof.start()
     print("Start training")
     val_acc = run_training(dataloader=dataloader, **training_params)
 
-    if enable_profiling:
+    if path_to_save_profiling_log is not None:
         print("Stop and save profiler log")
         prof.step()
         prof.stop()
