@@ -2,7 +2,7 @@ from fastai.data.core import DataLoaders
 from fastai.vision.all import *
 
 
-def get_fastai_cifar10_data(batch_size=128) -> DataLoaders:
+def get_data(batch_size=128) -> DataLoaders:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -40,7 +40,7 @@ class CustomCNN(nn.Module):
         return out
 
 
-def run_fastai_cifar10_training(
+def run_training(
     dataloader: DataLoaders,
     epochs: int = 3,
     batch_size: int = 128,

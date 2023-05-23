@@ -7,7 +7,7 @@ from mxnet.gluon.data.vision import datasets, transforms
 ctx = gpu() if context.num_gpus() > 0 else cpu()
 
 
-def get_mxnet_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -49,7 +49,7 @@ class CustomCNN:
         self.net.initialize(init=init.Xavier(), ctx=ctx)
 
 
-def run_mxnet_cifar10_training(
+def run_training(
     dataloader: dict,
     epochs: int = 3,
     batch_size: int = 128,

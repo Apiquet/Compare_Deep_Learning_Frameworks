@@ -3,7 +3,7 @@ from numpy import round
 from tqdm import tqdm
 
 
-def get_paddlepaddle_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -85,7 +85,7 @@ def train_test(program, reader, feed_order, place, avg_cost, acc):
     return [x / count for x in accumulated]
 
 
-def run_paddlepaddle_cifar10_training(
+def run_training(
     dataloader: dict,
     epochs: int = 3,
     batch_size: int = 128,

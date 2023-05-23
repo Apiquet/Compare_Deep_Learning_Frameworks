@@ -11,7 +11,7 @@ from torchvision import transforms
 from torchvision.datasets import CIFAR10
 
 
-def get_pytorch_lightning_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Pytorch lightling manages the loading of the database into the network class.
 
     This function is only present to be consistent with the code format
@@ -133,7 +133,7 @@ class CNNModel(L.LightningModule):
         return DataLoader(self.test_db, batch_size=self.batch_size)
 
 
-def run_pytorch_lightning_cifar10_training(
+def run_training(
     dataloader: dict,
     epochs: int = 3,
     batch_size: int = 128,

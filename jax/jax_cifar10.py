@@ -30,7 +30,7 @@ class CustomCNN:
         )
 
 
-def get_jax_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -99,7 +99,7 @@ def CrossEntropyLoss(
     return -jnp.mean(targets * log_preds)
 
 
-def run_jax_cifar10_training(
+def run_training(
     dataloader: Union[tf.Tensor, tf.data.Dataset],
     epochs: int = 3,
     batch_size: int = 128,

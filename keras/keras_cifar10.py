@@ -2,7 +2,7 @@
 from tensorflow import keras
 
 
-def get_keras_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -30,7 +30,7 @@ class CustomCNN(keras.Model):
         return self.model(x)
 
 
-def run_keras_cifar10_training(
+def run_training(
     dataloader: dict,
     epochs: int = 3,
     batch_size: int = 128,

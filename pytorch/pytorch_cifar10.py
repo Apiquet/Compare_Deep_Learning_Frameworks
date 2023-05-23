@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 from tqdm import tqdm
 
 
-def get_pytorch_cifar10_data(batch_size=128) -> dict:
+def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
 
     Returns:
@@ -71,7 +71,7 @@ class Net(nn.Module):
         return self.fc2(x)
 
 
-def run_pytorch_cifar10_training(
+def run_training(
     dataloader: dict,
     epochs: int = 3,
     batch_size: int = 128,
