@@ -59,7 +59,7 @@ class Net(nn.Module):
         self.pool1 = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
         self.pool2 = nn.MaxPool2d(2, 2)
-        input_flatten_size = int(16 * (input_size[0] / 4) * (input_size[1] / 4))
+        input_flatten_size = int(32 * (input_size[0] / 4) * (input_size[1] / 4))
         self.fc1 = nn.Linear(input_flatten_size, 64)
         self.fc2 = nn.Linear(64, classes_count)
 
