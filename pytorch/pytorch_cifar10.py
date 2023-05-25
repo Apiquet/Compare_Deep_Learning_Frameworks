@@ -9,6 +9,8 @@ import torchvision.transforms as transforms
 from sklearn.metrics import accuracy_score
 from tqdm import tqdm
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def get_data(batch_size=128) -> dict:
     """Get DataLoaders for CIFAR-10 dataset.
@@ -88,7 +90,7 @@ def run_training(
         input_data, _ = data
         input_size = input_data.shape
 
-    net = Net(input_size[2:4], classes_count)
+    net = Net(input_size[2:4], classes_count).to(device)
 
     # Define a loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -103,8 +105,8 @@ def run_training(
 
             optimizer.zero_grad()
 
-            outputs = net(input_data)
-            loss = criterion(outputs, labels)
+            outputs = net(input_data.to(device))
+            loss = criterion(outputs, labels.to(device))
             loss.backward()
             optimizer.step()
 
@@ -119,7 +121,7 @@ def run_training(
     with torch.no_grad():
         for data in testloader:
             images, labels = data
-            outputs = net(images)
+            outputs = net(images.to(device))
             predictions.append(outputs)
             targets.append(labels)
 
