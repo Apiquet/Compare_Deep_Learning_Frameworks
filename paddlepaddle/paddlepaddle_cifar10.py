@@ -64,8 +64,8 @@ def train_program():
     return [avg_cost, accuracy, predict]
 
 
-def optimizer_program():
-    return paddle.fluid.optimizer.Adam(learning_rate=0.001)
+def optimizer_program(learning_rate=0.0001):
+    return paddle.fluid.optimizer.Adam(learning_rate=learning_rate)
 
 
 def train_test(program, reader, feed_order, place, avg_cost, acc):
@@ -110,7 +110,7 @@ def run_training(
     # Test program
     test_program = main_program.clone(for_test=True)
 
-    optimizer = optimizer_program()
+    optimizer = optimizer_program(learning_rate=learning_rate)
     optimizer.minimize(avg_cost)
 
     exe = paddle.fluid.Executor(place)
